@@ -30,11 +30,30 @@ Every Monday:
 
 
 
+
 ### 3. scrape-keywords --> fetch 1400+ keywords from google serp
 cron: no
+TO DO: re-engineering using OOP
+
+
 
 
 ### 4. scrape inbound-links and monitoring it
+
+What does it do?
+
+*  crontab: every thuesday in the morning
+*  take links pages list --> from config.php file array
+*  for every page:
+
+	*  check if page is indexed by google
+ 	*  check if is there a noindex nofollow tag in header
+ 	*  check if link TO mysite is present in this page (-->Regex)
+	*  check if link TO mysite is follow or nofollow 
+	*  send mail notification to admin mail
+
+
+
 under construction (--> cron 1 time a week)
 
 

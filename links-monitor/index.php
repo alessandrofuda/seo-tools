@@ -14,6 +14,17 @@
  */
 
 
+// Initialize the session // authentication middleware
+session_start();
+// If session variable is not set it will redirect to login page
+if(!isset($_SESSION['username']) || empty($_SESSION['username'])) {
+	$msg = urlencode('Login required !');
+  	header("location: ../index.php?alertmsg=$msg");
+  	exit;
+}
+
+
+
 require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/config.php';
 
 ?>

@@ -1,5 +1,10 @@
 <?php
 /*
+
+RISCRIVERE ALL IN OOP !!
+
+
+
 SCRIPT PER ESTRARRE TUTTE LE QUERY CORRELATE AD UNA PRIMA KEYWORD
 PER BYPASSARE PROBLEMI DI FREE PROXY gira da LOCALHOST/scrape-keywords.php
 PROCEDURA SCRIPT
@@ -498,14 +503,14 @@ while ($obj = $result->fetch_object()) {
 	
 	echo "<tr id='key-".$obj->id."'>";
 	echo "<td class='counter'>" . ++$counter . "</td>";
-   echo "<td class='id'>" . $obj->id . "</td>";
-   echo "<td class='data'>" . str_replace(" ","<br/>",$obj->data_prima_rilevazione) . "</td>"; 
-   echo "<td class='keywords'>"; KeywordsColumn($obj->id,$obj->keywords,$obj->eliminato); echo "</td>";
-   echo "<td class='numb-words'>" . $obj->num_words . "</td>";
-   echo "<td class='status'>"; StatusColumn($obj->id, $obj->status, $obj->eliminato); echo "</td>"; 
-   echo "<td class='url'>"; UrlColumn($obj->id, $obj->url_posizionata); echo "</td>";
-   echo "<td class='position'>" . '' . "</td>";
-   echo "</tr>";
+	echo "<td class='id'>" . $obj->id . "</td>";
+	echo "<td class='data'>" . str_replace(" ","<br/>",$obj->data_prima_rilevazione) . "</td>"; 
+	echo "<td class='keywords'>"; KeywordsColumn($obj->id,$obj->keywords,$obj->eliminato); echo "</td>";
+	echo "<td class='numb-words'>" . $obj->num_words . "</td>";
+	echo "<td class='status'>"; StatusColumn($obj->id, $obj->status, $obj->eliminato); echo "</td>"; 
+	echo "<td class='url'>"; UrlColumn($obj->id, $obj->url_posizionata); echo "</td>";
+	echo "<td class='position'>" . '' . "</td>";
+	echo "</tr>";
 }
 $result->close();   // close result set
 

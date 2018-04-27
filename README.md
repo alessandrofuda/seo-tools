@@ -1,11 +1,14 @@
 # seo-tools
 
-### Agnostic framework tool for automatic web-site monitoring (with API Google Search Console + Se_rp Scra_ping)
+### Agnostic framework tool for automatic web-site monitoring (with Google Search Console API + Se_rp Scra_ping + external pages scrap)
 
 
 require:
 * edit crontab (crontab -e)
 * insert json file with Google API Credentials outside (before) root project
+
+
+
 
 
 ### 1. keywords list - API --> fetch data from google search console API. Useful for fetch first X keywords more populars on my site.

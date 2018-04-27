@@ -12,18 +12,21 @@ require:
 
 
 ### 1. keywords list - API --> fetch data from google search console API. Useful for fetch first X keywords more populars on my site.
+
 cron: no
 
 
 
 ### 2. scrape-serp --> serp monitoring tool
+
 cron: 1 time a week.
 
 Every Monday:
-	*	API call: fetch first 20 keywords array from google search-console API
-	*	populate keywords array in config-ss.php
-	*	scraping serp for this gold-keywords
-	*	populate Db (scrape_serp tab)
+
+*  API call: fetch first 20 keywords array from google search-console API
+*  populate keywords array in config-ss.php
+*  scraping serp for this gold-keywords
+*  populate Db (scrape_serp tab)
 
 
 

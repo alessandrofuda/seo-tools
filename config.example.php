@@ -2,7 +2,7 @@
 
 /**
  *
- *  Commons config for All 3 applications
+ *  Commons config for All 4 applications
  *
  */
 

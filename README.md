@@ -5,7 +5,7 @@
 
 require:
 * edit crontab (crontab -e)
-* insert json file with Google API Credentials outside (before) root project
+* upload json file with Google API Credentials outside (before) root project
 
 
 
@@ -20,10 +20,10 @@ cron: no
 cron: 1 time a week.
 
 Every Monday:
-	a.	API call: fetch first 20 keywords array from google search-console API
-	b.	populate keywords array in config-ss.php
-	c.	scraping serp for this gold-keywords
-	d.	populate Db (scrape_serp tab)
+	*	API call: fetch first 20 keywords array from google search-console API
+	*	populate keywords array in config-ss.php
+	*	scraping serp for this gold-keywords
+	*	populate Db (scrape_serp tab)
 
 
 

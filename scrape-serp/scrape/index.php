@@ -37,7 +37,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/keywords/API-call.php';
 $apiCall_for_scrape = new SC_API_Call;
 $miosito_API_call = 'https://www.'.$miosito;
 $keywords = $apiCall_for_scrape->gold_keywords($miosito_API_call,$to_date,$from_date);
-$keywords = array_slice($keywords, 0, $keywords_number);  // select from search console only firs X keywords
+$keywords = array_slice($keywords, 0, $keywords_number);  // select from search console only firsts X keywords
 foreach ($keywords as $keyword) {
 	$keys[] = $keyword['keyword'];
 }
@@ -107,7 +107,7 @@ foreach ($keys as $key) {
 
 	// 5)
 	if(count($keys) > 1) {
-		$s = rand(30,180);
+		$s = rand(50,240);
 		set_time_limit($s + 30);
 		sleep($s);
 	}

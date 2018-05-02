@@ -34,4 +34,43 @@ function data_ita($data_standard) {  // data standard: '2016-02-01 15:00:00'
 	} else {
 		return '';
 		}
+
+}
+
+
+
+
+function get_target_url_per_keyword($conn) {  // return an unique associative array
+
+	/*
+	$array = [
+		'pannelli fotovoltaici' => 'https://testing1...',
+		'kw TEST2' => 'https://testing2...',
+		'kw TEST3' => 'https://testing3...',
+		'kw TEST4' => 'https://testing4...',
+	]; */
+
+
+	$target = "SELECT `keyword`,`target_url` FROM `target_url_per_keywords`";
+	$query = $conn->query($target);
+	$arrays = $query->fetch_all();
+
+	foreach ($arrays as $ar) {
+		$key = $ar[0];
+		$val = $ar[1];
+		
+		$array[$key] = $val;		
+	}	
+
+	// var_dump($array);
+	return $array;
+
+}
+
+
+
+function set_target_url_per_keyword() {
+
+	//
+
 }

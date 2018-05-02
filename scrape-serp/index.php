@@ -30,6 +30,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 	<meta name="robots" content="noindex,nofollow">
 	<title>Keywords Monitoring Tool</title>
+	<!-- bootstrap 3 -->
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 	<style>
 		body { font-size: 12px; }
@@ -53,6 +56,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		#footer { padding:3% 0; text-align: center; color:#CCCCCC; line-height: 2;}
 	</style>
 	<script src="//code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script>
 		$(document).ready( function () {
@@ -61,6 +65,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
     		} );
 		});
 	</script>
+	<!-- https://vitalets.github.io/x-editable/ -->
+	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 </head>
 <body>
 	<div class="header">
@@ -110,19 +117,26 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 	// print_r($keys);
 	// echo '</pre>';
 
+
+
+	// assoc array of target urls for each keywords
+	$target_url = get_target_url_per_keyword($conn);
+
+
 		
 	// tabella HTML
 	$row = 0;
 	foreach ($keys as $key) {  // // tabella HTML  -- loop 2 html
 			
 		//variabili tabella
+		$key = trim($key);
 		$p_sett_scorsa = pos_sett_scorsa($conn,$key); //array
 		$p_sett_in_corso = pos_sett_in_corso($conn,$key); //array // finire!!!
 		//echo '<pre>'; var_dump($p_sett_in_corso); echo '</pre>';
 		
 		$p_sett_sc = intval($p_sett_scorsa['position']); // integer
 		$date_sett_sc = $p_sett_scorsa['mysql_date'];
-		$url_da_spingere = $p_sett_in_corso['url_da_spingere'];
+		$url_da_spingere = $target_url[$key];
 		$url = $p_sett_in_corso['url'];
 		// $p = intval($p_sett_in_corso['position']);
 		$p = empty($url) ? 'N.D.' : intval($p_sett_in_corso['position']);
@@ -190,7 +204,37 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 	   	echo "<td>" . (++$row) . "</td>";
 	   	echo "<td>" . $key . "</td>"; 
 	   	// echo "<td>" . " " . "</td>";
-	   	echo "<td><div class='url'><a href='https://".$url_da_spingere."' target='blank'>".$url_da_spingere."</a></div></td>";
+	   	echo "<td>";
+	   	echo "<div class='url'><a href='https://".$url_da_spingere."' target='blank'>".$url_da_spingere."</a></div>"; ?>
+
+
+
+
+	   	<div class='btn-section'>
+	   		<!--form id='edit-<?php /* echo $row; */ ?>'>
+	   			<input type="text" style="display:none;" value="ZZZZZZZZZZZZZ">
+	   		</form-->
+
+
+	   		<a href="#" id="edit-<?php echo $row; ?>" data-type="text" data-pk="" data-url="/post" data-title="Edit url">Edit</a>
+
+
+
+	   	</div>
+	   	usare: https://vitalets.github.io/x-editable/docs.html
+	   	<!--script>
+	   		$(document).ready(function() {
+		        $('#edit-<?php echo $row; ?>').editable();
+		    });
+	   	</script-->
+	   	
+
+
+
+
+
+
+<?php 	echo "</td>";
 	   	echo "<td><div class='url'><a href='https://".$url."' target='blank'>".$url."</a></div></td>";
 	   	echo "<td class='posit'><div class='p-num'>" . $p_sett_sc ."</div><div class='sub-date'>". data_ita($date_sett_sc) ."</div>"."</td>"; //sett scorsa (lunedì)
 	   	echo "<td class='posit this-week $color'><div class='p-num'>" . $p . "</div><div class='sub-date'>". data_ita($giorno) ."</div></td>"; 

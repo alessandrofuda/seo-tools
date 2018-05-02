@@ -32,7 +32,7 @@ Every Monday:
 
 
 ### 3. scrape-keywords --> fetch 1400+ keywords from google serp
-cron: no
+cron: no, manual update
 TO DO: re-engineering using OOP
 
 

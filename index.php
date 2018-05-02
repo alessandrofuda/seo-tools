@@ -31,7 +31,10 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
 
 	            /* Password is correct, so start a new session and save the username to the session */
 	            // session_start();
-	            $_SESSION['username'] = 'me-stesso-medesimo';      
+	            $_SESSION['username'] = 'me-stesso-medesimo';
+	            $user = $_SESSION['username'];
+	            $cookie_expiring = 2592000;  // 30 gg  // -1 delete cookie
+	            setcookie('LOGIN', $user, time()+$cookie_expiring);
 	            header("location: index.php");
 	            
 	        } else {
@@ -53,6 +56,8 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
 		$_SESSION = array();
 		// Destroy the session.
 		session_destroy();
+		// delete LOGIN cookie
+		setcookie('LOGIN', '', time()-1);
 		header("location: index.php");
 	}
 
@@ -79,18 +84,19 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
 	</head>
 	<body>
 		<div class="container">
-
 			<?php 
+
 				if( isset($_GET['alertmsg']) && !isset($_SESSION['username']) ) { 
 					$msg = $_GET['alertmsg'];
 					echo '<div class="alert-msg">' . urldecode($msg) . '</div>';
 			 	} 
-			?>
 
+			?>
 			<h1 class="title">SEO TOOLS</h1>
 			<div class="sub-title">Your IP: <?php echo $_SERVER['REMOTE_ADDR']; ?></div>
-
-			<?php if(!isset($_SESSION['username']) || empty($_SESSION['username'])) {  ?>
+			<?php 
+				if(!isset($_SESSION['username']) || empty($_SESSION['username'])) {  
+			?>
 			<div class="list">
 				<ul style="text-align: center; list-style: none; padding-left:0;">
 					<li>Keywords list</li>
@@ -108,8 +114,9 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
             		</div>
         		</form>
 			</div>
-
-			<?php } else {  ?>
+			<?php 
+				} else {  
+			?>
 			<div class="list">
 				<ul>
 					<li><a href="keywords" target="_blank">Keywords List</a> <span class="notation">(API google search console)</span></li>
@@ -128,9 +135,9 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
             		</div>
         		</form>
 			</div>
-
-			<?php  }  ?>
-
+			<?php  
+				}  
+			?>
 		</div>
 	</body>
 </html>

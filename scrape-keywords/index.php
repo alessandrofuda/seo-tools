@@ -62,7 +62,7 @@ $cxContext = stream_context_create($aContext);
 //var_dump($cxContext);*/
 
 
-$output0 = file_get_contents($search_url); //, false, $cxContext); 
+$output0 = file_get_contents($search_url); //, false, $cxContext);   --> usare CLASSE scrapeSerp /scrape-serp/scrape/class.php 
 //var_dump($output0);
 
 	

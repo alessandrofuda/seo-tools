@@ -65,9 +65,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
     		} );
 		});
 	</script>
-	<!-- https://vitalets.github.io/x-editable/ -->
-	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 </head>
 <body>
 	<div class="header">
@@ -221,12 +218,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
 	   	</div>
-	   	usare: https://vitalets.github.io/x-editable/docs.html
-	   	<!--script>
-	   		$(document).ready(function() {
-		        $('#edit-<?php echo $row; ?>').editable();
-		    });
-	   	</script-->
+	   	
 	   	
 
 

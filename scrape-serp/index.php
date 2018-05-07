@@ -33,7 +33,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 	<!-- bootstrap 3 -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 	<style>
 		body { font-size: 12px; }
 		.header { text-align: center; margin-bottom: 20px;}
@@ -55,14 +54,33 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		footer { min-height: 50px; margin:30px auto; }
 		#footer { padding:3% 0; text-align: center; color:#CCCCCC; line-height: 2;}
 	</style>
+
 	<script src="//code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<!-- datatables-->
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 	<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script>
 		$(document).ready( function () {
     		$('#monitor-table').DataTable( {
     			"pageLength": 50
     		} );
+		});
+	</script>
+
+	<!-- tabledit --> 
+	<script src="/vendor/jquery-tabledit/jquery.tabledit.min.js"></script>
+	<script>
+		$('#monitor-table').Tabledit({
+		    url: 'update-db.php',
+		    editButton: false,
+		    deleteButton: false,
+		    hideIdentifier: true,
+		    columns: {
+		        identifier: [0, 'id'],
+		        editable: [[2, 'firstname'], [3, 'lastname']]
+		    }
 		});
 	</script>
 </head>
@@ -118,6 +136,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 	// assoc array of target urls for each keywords
 	$target_url = get_target_url_per_keyword($conn);
+	echo '<pre>';
+	var_dump($target_url);
+	echo '</pre>';
 
 
 		
@@ -133,7 +154,27 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		
 		$p_sett_sc = intval($p_sett_scorsa['position']); // integer
 		$date_sett_sc = $p_sett_scorsa['mysql_date'];
-		$url_da_spingere = $target_url[$key];
+		
+
+
+		/// FINIRE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+		
+		// $keyw_id = 
+		//$url_da_spingere = $target_url[$key];
+
+		$test = array_filter($target_url, function($value){ return ($value == $key); });
+		echo '<pre>';
+		var_dump($test);
+		echo '</pre>';
+
+		
+		// $url_da_spingere = ...... $target_url target_url
+		
+
+
+
 		$url = $p_sett_in_corso['url'];
 		// $p = intval($p_sett_in_corso['position']);
 		$p = empty($url) ? 'N.D.' : intval($p_sett_in_corso['position']);
@@ -197,41 +238,31 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
 		//tabella
-	   	echo "<tr>";
-	   	echo "<td>" . (++$row) . "</td>";
-	   	echo "<td>" . $key . "</td>"; 
+	   	echo "<tr id='".$id."'>";
+	   	echo 	"<td>" . (++$row) . "</td>";
+	   	echo 	"<td>" . $key . "</td>"; 
 	   	// echo "<td>" . " " . "</td>";
-	   	echo "<td>";
-	   	echo "<div class='url'><a href='https://".$url_da_spingere."' target='blank'>".$url_da_spingere."</a></div>"; ?>
+	   	echo 	"<td>";
+	   	echo 		"<div class='url to-be-positioned'><a href='https://".$url_da_spingere."' target='blank'>".$url_da_spingere."</a></div>"; ?>
 
 
 
 
 	   	<div class='btn-section'>
-	   		<!--form id='edit-<?php /* echo $row; */ ?>'>
-	   			<input type="text" style="display:none;" value="ZZZZZZZZZZZZZ">
-	   		</form-->
-
-
 	   		<a href="#" id="edit-<?php echo $row; ?>" data-type="text" data-pk="" data-url="/post" data-title="Edit url">Edit</a>
-
-
-
 	   	</div>
 	   	
-	   	
 
 
 
 
 
-
-<?php 	echo "</td>";
-	   	echo "<td><div class='url'><a href='https://".$url."' target='blank'>".$url."</a></div></td>";
-	   	echo "<td class='posit'><div class='p-num'>" . $p_sett_sc ."</div><div class='sub-date'>". data_ita($date_sett_sc) ."</div>"."</td>"; //sett scorsa (lunedì)
-	   	echo "<td class='posit this-week $color'><div class='p-num'>" . $p . "</div><div class='sub-date'>". data_ita($giorno) ."</div></td>"; 
-	   	echo "<td class='variaz $color_var'>".$variaz_perc_str ."</td>";
-	   	echo "<td class='notes'>" . $annotaz . "</td>";
+<?php 	echo 	"</td>";
+	   	echo 	"<td><div class='url'><a href='https://".$url."' target='blank'>".$url."</a></div></td>";
+	   	echo 	"<td class='posit'><div class='p-num'>" . $p_sett_sc ."</div><div class='sub-date'>". data_ita($date_sett_sc) ."</div>"."</td>"; //sett scorsa (lunedì)
+	   	echo 	"<td class='posit this-week $color'><div class='p-num'>" . $p . "</div><div class='sub-date'>". data_ita($giorno) ."</div></td>"; 
+	   	echo 	"<td class='variaz $color_var'>".$variaz_perc_str ."</td>";
+	   	echo 	"<td class='notes'>" . $annotaz . "</td>";
 	   	echo "</tr>";
    	
 	} 

@@ -129,62 +129,70 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
 	// assoc array of target urls for each keywords
-	$target_url = get_target_url_per_keyword($conn);
-	echo '<pre>';
-	var_dump($target_url);
+	$target_urls = get_target_url_per_keyword($conn);
+	
+	/*echo '<pre>';
+	var_dump($target_urls);
 	echo '</pre>';
+
+	echo '<pre>';
+	var_dump($keys);
+	echo '</pre>';
+	echo '<br/>***************************<br/>';
+	*/
 
 
 		
 	// tabella HTML
 	$row = 0;
+	$n = 0;
 	foreach ($keys as $key) {  // // tabella HTML  -- loop 2 html
-			
+		
+		$target_url = array();
+
 		//variabili tabella
 		$key = trim($key);
 		$p_sett_scorsa = pos_sett_scorsa($conn,$key); //array
-		$p_sett_in_corso = pos_sett_in_corso($conn,$key); //array // finire!!!
+		$p_sett_in_corso = pos_sett_in_corso($conn,$key); //array 
 		//echo '<pre>'; var_dump($p_sett_in_corso); echo '</pre>';
 		$p_sett_sc = intval($p_sett_scorsa['position']); // integer
 		$date_sett_sc = $p_sett_scorsa['mysql_date'];
 
 		
-		// $keyw_id =  
-		$url_filtered = array_filter($target_url, function($value) use ($key) {
-			return $value['keyword'] === $key ? true : false;
+		$target_url = array_filter($target_urls, function($value) use ($key) {  // IMPORTANT !! filtra l'array MA NON cambia la index !!!!!!!!!!!!!!
+
+			return $value['keyword'] == $key; // RENDERE CASE INSENSITIVE
 		});
 
-		echo '<pre>';
-		var_dump($url_filtered);
+
+		$target_url = array_values($target_url); //[0];  // IMPORTANT !! get FIRST element of array tough the first element has key = 1 || 2 || 3 || ...
+		$target_url = is_array($target_url) ? $target_url[0] : null;
+		//var_dump($target_url);
+		
+
+		/*
+		echo '<br/>-------------------<br/>';
+		var_dump($n); 
+		
+		echo '<br/>$target_urls: <pre>';
+		var_dump($target_urls);
 		echo '</pre>';
-		//die('stopp');
 
+		echo '<br/>$key: ';
+		var_dump($key);
+		echo '<br/>';
 		
-		// $url_da_spingere = ...... $target_url target_url
+		echo '<br/>$target_url: <pre>';
+		var_dump($target_url);
+		echo '</pre>';
+		*/
 		
-
-
 
 		$url = $p_sett_in_corso['url'];
 		// $p = intval($p_sett_in_corso['position']);
 		$p = empty($url) ? 'N.D.' : intval($p_sett_in_corso['position']);
 		$giorno = $p_sett_in_corso['mysql_date'];
 		$annotaz = $p_sett_in_corso['note'];
-
-
-
-
-
-
-
-		//TEST
-		// $p_sett_sc = 10;
-
-
-
-
-
-
 
 
 		if(is_numeric($p_sett_sc) && $p_sett_sc > 0 ) {
@@ -228,19 +236,19 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
 		//tabella
-	   	echo "<tr id='".$id."'>";
+	   	echo "<tr id='". $target_url['id'] ."'>";   // rendere condizionale: se esiste .... se no 0 --> anche il target url qui sotto (per non sporcare il log)
 	   	echo 	"<td>" . (++$row) . "</td>";
 	   	echo 	"<td>" . $key . "</td>"; 
 	   	// echo "<td>" . " " . "</td>";
 	   	echo 	"<td>";
-	   	echo 		"<div class='url to-be-positioned'><a href='https://".$url_da_spingere."' target='blank'>".$url_da_spingere."</a></div>"; ?>
+	   	echo 		"<div class='url to-be-positioned'><a href='https://" . $target_url['target_url'] . "' target='blank'>" . $target_url['target_url'] . "</a></div>"; ?>
 
 
 
 
-	   	<div class='btn-section'>
-	   		<a href="#" id="edit-<?php echo $row; ?>" data-type="text" data-pk="" data-url="/post" data-title="Edit url">Edit</a>
-	   	</div>
+	   	<!--div class='btn-section'>
+	   		<a href="#" id="edit-<?php /* echo $row; */ ?>" data-type="text" data-pk="" data-url="/post" data-title="Edit url">Edit</a>
+	   	</div-->
 	   	
 
 
@@ -263,6 +271,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 ?>
 			</tbody>
 		</table>
-		<?php include $_SERVER['DOCUMENT_ROOT'].'/seo-tools/footer.php' ?>
+		<?php include $_SERVER['DOCUMENT_ROOT'].'/seo-tools/footer.php'; ?>
 	</body>
 </html>

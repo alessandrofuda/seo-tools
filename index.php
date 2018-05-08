@@ -6,8 +6,13 @@
 // Initialize the session
 session_start();
 
+//var_dump($_COOKIE);
+//var_dump($_SESSION);
+//die('stop');
+
+
 // If session variable is not set it will redirect to login page
-if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
+if(!isset($_SESSION['username']) || empty($_SESSION['username']) || !isset($_COOKIE['LOGIN']) || empty($_COOKIE['LOGIN']) ) {
 
 	$password_err = "";
 
@@ -86,7 +91,7 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
 		<div class="container">
 			<?php 
 
-				if( isset($_GET['alertmsg']) && !isset($_SESSION['username']) ) { 
+				if( isset($_GET['alertmsg']) && !isset($_SESSION['username']) /* !isset($_COOKIE['LOGIN']) */) { 
 					$msg = $_GET['alertmsg'];
 					echo '<div class="alert-msg">' . urldecode($msg) . '</div>';
 			 	} 
@@ -95,7 +100,7 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
 			<h1 class="title">SEO TOOLS</h1>
 			<div class="sub-title">Your IP: <?php echo $_SERVER['REMOTE_ADDR']; ?></div>
 			<?php 
-				if(!isset($_SESSION['username']) || empty($_SESSION['username'])) {  
+				if(!isset($_SESSION['username']) || empty($_SESSION['username']) || !isset($_COOKIE['LOGIN']) || empty($_COOKIE['LOGIN']) ) {  
 			?>
 			<div class="list">
 				<ul style="text-align: center; list-style: none; padding-left:0;">

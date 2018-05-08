@@ -127,12 +127,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		$keys[] = $key[0];
 	}
 
-	
-	// echo '<pre>';
-	// print_r($keys);
-	// echo '</pre>';
-
-
 
 	// assoc array of target urls for each keywords
 	$target_url = get_target_url_per_keyword($conn);
@@ -151,23 +145,19 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		$p_sett_scorsa = pos_sett_scorsa($conn,$key); //array
 		$p_sett_in_corso = pos_sett_in_corso($conn,$key); //array // finire!!!
 		//echo '<pre>'; var_dump($p_sett_in_corso); echo '</pre>';
-		
 		$p_sett_sc = intval($p_sett_scorsa['position']); // integer
 		$date_sett_sc = $p_sett_scorsa['mysql_date'];
-		
-
-
-		/// FINIRE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 		
-		// $keyw_id = 
-		//$url_da_spingere = $target_url[$key];
+		// $keyw_id =  
+		$url_filtered = array_filter($target_url, function($value) use ($key) {
+			return $value['keyword'] === $key ? true : false;
+		});
 
-		$test = array_filter($target_url, function($value){ return ($value == $key); });
 		echo '<pre>';
-		var_dump($test);
+		var_dump($url_filtered);
 		echo '</pre>';
+		//die('stopp');
 
 		
 		// $url_da_spingere = ...... $target_url target_url

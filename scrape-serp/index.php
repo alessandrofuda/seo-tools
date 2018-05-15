@@ -46,6 +46,8 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		td, th { max-width:800px; }
 		/*th.sorting { min-width: 180px; } */
 		.url a { color: #454141; font-size: 90%; }
+		.target_url { float: left; }
+		.edit-btn { margin-left: 5px; display: inline-block; }
 		.posit { text-align: center; font-size: x-large;}
 		.this-week { background-color: #EDEDED; }
 		.sub-date { font-size: x-small; }
@@ -55,9 +57,8 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		#footer { padding:3% 0; text-align: center; color:#CCCCCC; line-height: 2;}
 	</style>
 
-	<script src="//code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 	<!-- datatables-->
 	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 	<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -66,21 +67,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
     		$('#monitor-table').DataTable( {
     			"pageLength": 50
     		} );
-		});
-	</script>
-
-	<!-- tabledit --> 
-	<script src="/vendor/jquery-tabledit/jquery.tabledit.min.js"></script>
-	<script>
-		$('#monitor-table').Tabledit({
-		    url: 'update-db.php',
-		    editButton: false,
-		    deleteButton: false,
-		    hideIdentifier: true,
-		    columns: {
-		        identifier: [0, 'id'],
-		        editable: [[2, 'firstname'], [3, 'lastname']]
-		    }
 		});
 	</script>
 </head>
@@ -128,20 +114,11 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 	}
 
 
-	// assoc array of target urls for each keywords
+	// array of assoc array of target urls for each keywords
 	$target_urls = get_target_url_per_keyword($conn);
-	
-	/*echo '<pre>';
-	var_dump($target_urls);
-	echo '</pre>';
-
-	echo '<pre>';
-	var_dump($keys);
-	echo '</pre>';
-	echo '<br/>***************************<br/>';
-	*/
-
-
+	// echo '<pre>';
+	// var_dump($target_urls);
+	// echo '</pre>';
 		
 	// tabella HTML
 	$row = 0;
@@ -161,31 +138,12 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		
 		$target_url = array_filter($target_urls, function($value) use ($key) {  // IMPORTANT !! filtra l'array MA NON cambia la index !!!!!!!!!!!!!!
 
-			return $value['keyword'] == $key; // RENDERE CASE INSENSITIVE
+			return strtolower($value['keyword']) == strtolower($key); // RENDERE CASE INSENSITIVE
 		});
 
-
+		
 		$target_url = array_values($target_url); //[0];  // IMPORTANT !! get FIRST element of array tough the first element has key = 1 || 2 || 3 || ...
 		$target_url = is_array($target_url) ? $target_url[0] : null;
-		//var_dump($target_url);
-		
-
-		/*
-		echo '<br/>-------------------<br/>';
-		var_dump($n); 
-		
-		echo '<br/>$target_urls: <pre>';
-		var_dump($target_urls);
-		echo '</pre>';
-
-		echo '<br/>$key: ';
-		var_dump($key);
-		echo '<br/>';
-		
-		echo '<br/>$target_url: <pre>';
-		var_dump($target_url);
-		echo '</pre>';
-		*/
 		
 
 		$url = $p_sett_in_corso['url'];
@@ -221,11 +179,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		if($p >= 4 && $p <= 6)  { $color = 'orange'; } 
 		if($p >= 7 /*&& $p <= 10*/) { $color = 'red'; }
 		
-		//if($p_sett_scorsa == 0) { $color = 'red'; }
-		//if($p_sett_scorsa >= 1 && $p_sett_scorsa <= 3)  { $color = 'green'; }
-		//if($p_sett_scorsa >= 4 && $p_sett_scorsa <= 6)  { $color = 'orange'; } 
-		//if($p_sett_scorsa >= 7 && $p_sett_scorsa <= 10) { $color = 'red'; }
-		
 		
 		if($p < $p_sett_sc && $p != 0) 	  { $color_var = 'green'; }
 		if($p > $p_sett_sc && $p != 0) 	  { $color_var = 'red'; }
@@ -234,35 +187,106 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		
 
 
-
 		//tabella
-	   	echo "<tr id='". $target_url['id'] ."'>";   // rendere condizionale: se esiste .... se no 0 --> anche il target url qui sotto (per non sporcare il log)
-	   	echo 	"<td>" . (++$row) . "</td>";
-	   	echo 	"<td>" . $key . "</td>"; 
-	   	// echo "<td>" . " " . "</td>";
-	   	echo 	"<td>";
-	   	echo 		"<div class='url to-be-positioned'><a href='https://" . $target_url['target_url'] . "' target='blank'>" . $target_url['target_url'] . "</a></div>"; ?>
-
-
-
-
-	   	<!--div class='btn-section'>
-	   		<a href="#" id="edit-<?php /* echo $row; */ ?>" data-type="text" data-pk="" data-url="/post" data-title="Edit url">Edit</a>
-	   	</div-->
+		$target_url_id = $target_url['id'] !== null ? $target_url['id'] : '';   
+?>
 	   	
+	   	<tr id='row-<?php echo $row+1; /* $target_url_id; */ ?>'>   
+	   		<td><?php echo ++$row; ?></td>
+	   		<td><?php echo $key; ?></td> 
+	   		
+
+
+	   		<td>
+	   			<div class='url target_url'>
+	   				<a href='https://<?php echo $target_url['target_url']; ?>' target='blank'><?php echo $target_url['target_url']; ?></a>
+	   			</div>
+	   			<form id='form-<?php echo $row; ?>' class="input_url" method="post">
+	   				<!--input type="hidden" id='<?php /* echo $target_url['id']; */ ?>'-->
+	   				<!--input type="hidden" id='keyw-<?php /* echo $row; */ ?>' name='keyw-<?php /* echo $row; */ ?>' value='<?php /* echo $target_url['keyword']; */ ?>'-->
+	   				<input type="text" id='target_url-<?php echo $row; ?>' name='target_url-<?php echo $row; ?>' placeholder="Url.." />  <!-- value='<?php /* echo $target_url['target_url']; */ ?>' -->
+	   			</form>
+	   			<div id='edit-btn-<?php echo $row; ?>'>
+	   				<a href='#'><span class='glyphicon glyphicon-pencil'></span></a>
+	   			</div>
+	   			<div id='cancel-btn-<?php echo $row; ?>'>
+	   				<a href="#">Annulla</a>
+	   			</div>
+ 			</td>
 
 
 
 
+			<td>
+				<div class='url'><a href='https://<?php echo $url; ?>' target='blank'><?php echo $url; ?></a></div>
+			</td>
+			<td class='posit'>
+				<div class='p-num'><?php echo $p_sett_sc; ?></div>
+				<div class='sub-date'><?php echo data_ita($date_sett_sc); ?></div>
+			</td>
+			<td class='posit this-week $color'>
+				<div class='p-num'><?php echo $p; ?></div>
+				<div class='sub-date'><?php echo data_ita($giorno); ?></div>
+			</td> 
+			<td class='variaz <?php echo $color_var; ?>'><?php echo $variaz_perc_str; ?></td>
+			<td class='notes'><?php echo $annotaz; ?></td>
+		</tr>
 
-<?php 	echo 	"</td>";
-	   	echo 	"<td><div class='url'><a href='https://".$url."' target='blank'>".$url."</a></div></td>";
-	   	echo 	"<td class='posit'><div class='p-num'>" . $p_sett_sc ."</div><div class='sub-date'>". data_ita($date_sett_sc) ."</div>"."</td>"; //sett scorsa (lunedì)
-	   	echo 	"<td class='posit this-week $color'><div class='p-num'>" . $p . "</div><div class='sub-date'>". data_ita($giorno) ."</div></td>"; 
-	   	echo 	"<td class='variaz $color_var'>".$variaz_perc_str ."</td>";
-	   	echo 	"<td class='notes'>" . $annotaz . "</td>";
-	   	echo "</tr>";
-   	
+
+
+		<script>
+			$(document).ready(function(){
+
+				// default
+				$('#form-<?php echo $row; ?>').css('display','none'); 
+				$('#cancel-btn-<?php echo $row; ?>').css('display','none'); 
+
+
+				// view/hide edit/cancel btns
+				$('#edit-btn-<?php echo $row; ?>').on('click', function(){
+					$('#form-<?php echo $row; ?>').css('display','block'); 
+					$('#edit-btn-<?php echo $row; ?>').css('display','none');
+					$('#cancel-btn-<?php echo $row; ?>').css('display','block');
+				});
+				$('#cancel-btn-<?php echo $row; ?>').on('click', function(){
+					$('#form-<?php echo $row; ?>').css('display','none');
+					$('#edit-btn-<?php echo $row; ?>').css('display','block');
+					$('#cancel-btn-<?php echo $row; ?>').css('display','none');
+				});
+
+				// ajax call
+				$('#form-<?php echo $row; ?>').keypress(function(e) {
+				    if(e.which == 13) {
+				    	
+				    	var keyword_<?php echo $row; ?> = $('#keyw-<?php echo $row; ?>').val();
+						var target_url_<?php echo $row; ?> = $('#target_url-<?php echo $row; ?>').val();
+
+				        alert($('#target_url-<?php echo $row; ?>').val());
+				        alert(target_url_<?php echo $row; ?>);
+				        
+				        $.ajax({
+		                    url:'functions.php',
+		                    method:'POST',
+		                    data:{
+		                        keyword:keyword_<?php echo $row; ?>,
+		                        target_url:target_url_<?php echo $row; ?>,
+		                    },
+		                   	success:function(data){
+		                       // alert(data);
+		                   	}
+		                });
+
+
+				    }
+				});
+
+			});
+			
+		</script>
+
+
+
+<?php   	
 	} 
 
 	$conn->close();
@@ -271,6 +295,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 ?>
 			</tbody>
 		</table>
-		<?php include $_SERVER['DOCUMENT_ROOT'].'/seo-tools/footer.php'; ?>
+	<?php include $_SERVER['DOCUMENT_ROOT'].'/seo-tools/footer.php'; ?>
 	</body>
 </html>

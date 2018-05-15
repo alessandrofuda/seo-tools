@@ -60,7 +60,7 @@ function get_target_url_per_keyword($conn) {
 
 
 
-function set_target_url_per_keyword() {
+function set_target_url_per_keyword($conn) {
 
 	//
 

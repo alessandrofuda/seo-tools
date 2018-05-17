@@ -6,9 +6,10 @@
 // Initialize the session
 session_start();
 
-//var_dump($_COOKIE);
-//var_dump($_SESSION);
-//die('stop');
+// var_dump($_COOKIE);
+// var_dump($_SESSION);
+// phpinfo();
+// die('stop');
 
 
 // If session variable is not set it will redirect to login page
@@ -99,7 +100,7 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username']) || !isset($_COO
 			?>
 			<h1 class="title">SEO TOOLS</h1>
 			<div class="sub-title">Your IP: <?php echo $_SERVER['REMOTE_ADDR']; ?></div>
-			<?php 
+			<?php // authentication
 				if(!isset($_SESSION['username']) || empty($_SESSION['username']) || !isset($_COOKIE['LOGIN']) || empty($_COOKIE['LOGIN']) ) {  
 			?>
 			<div class="list">

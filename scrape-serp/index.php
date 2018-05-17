@@ -18,10 +18,23 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/DB-class.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
+//conn db
+$db = new DB;
+$conn = $db->connect();	
 
-//TEST
-//$key = array('testing'); //, 'prova');
-//$miosito = 'wikipedia.org';
+$query = "SELECT DISTINCT `keyw` FROM `wp_analisi_serp`";  
+$result = $conn->query($query);
+$keysss = $result->fetch_all();
+foreach ($keysss as $key) {
+	$keys[] = $key[0];
+}
+
+
+// array of assoc array of target urls for each keywords
+$target_urls = get_target_url_per_keyword($conn);
+
+
+
 
 ?>
 <!doctype html>
@@ -46,8 +59,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		td, th { max-width:800px; }
 		/*th.sorting { min-width: 180px; } */
 		.url a { color: #454141; font-size: 90%; }
-		.target_url { float: left; }
-		.edit-btn { margin-left: 5px; display: inline-block; }
+		.target_url { display: inline-block; }
+		.edit-btn { display: inline-block; }
+		#monitor-table td .glyphicon { margin-left: 10px; font-size: 110%; border: 1px solid #DCDCDC; padding: 2px; border-radius: 3px; }
 		.posit { text-align: center; font-size: x-large;}
 		.this-week { background-color: #EDEDED; }
 		.sub-date { font-size: x-small; }
@@ -74,23 +88,13 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 	<div class="header">
 		<h1>Keywords Monitoring Tool<h1>
 		<h4>Ciclo scrap settimanale (ogni lunedì h. 6:00)</h4>
-		<div class="todo">
-			<div class="todo-tit">TODO:</div>
-			<ul>
-				<li>confronto su settimana/mese</li>
-				<li>add percentuale a variazione</li>
-				<li>migliorare controlli scraping (nel matching nell'html)</li>
-				<li>Collegare a API google: fetch from google API search console most popular $keys array </li>
-				<li>individuare dal blog le "url da spingere"</li>
-			</ul>
-		</div>
 	</div>
 	<table id="monitor-table">
 		<thead>
 			<tr style='text-align: center;'>
 				<th><b>N.</b></th>
 				<th><b>Key</b></th>
-				<?php /* <th><b>CPM ads</b></th> */ ?>
+				<!--th><b>CPM ads</b></th-->
 				<th><b>Url da spingere</b></th>
 				<th><b>Url posizionata</b></th>
 				<th><b>Position Sett Scorsa</b></th>
@@ -101,30 +105,14 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		</thead>
 		<tbody>
 <?php 
-	
-	//conn db
-	$db = new DB;
-	$conn = $db->connect();	
-
-	$query = "SELECT DISTINCT `keyw` FROM `wp_analisi_serp`";  
-	$result = $conn->query($query);
-	$keysss = $result->fetch_all();
-	foreach ($keysss as $key) {
-		$keys[] = $key[0];
-	}
 
 
-	// array of assoc array of target urls for each keywords
-	$target_urls = get_target_url_per_keyword($conn);
-	// echo '<pre>';
-	// var_dump($target_urls);
-	// echo '</pre>';
-		
 	// tabella HTML
 	$row = 0;
 	$n = 0;
 	foreach ($keys as $key) {  // // tabella HTML  -- loop 2 html
 		
+		$row++;
 		$target_url = array();
 
 		//variabili tabella
@@ -191,32 +179,23 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 		$target_url_id = $target_url['id'] !== null ? $target_url['id'] : '';   
 ?>
 	   	
-	   	<tr id='row-<?php echo $row+1; /* $target_url_id; */ ?>'>   
-	   		<td><?php echo ++$row; ?></td>
-	   		<td><?php echo $key; ?></td> 
-	   		
-
-
+	   	<tr id='row-<?php echo $row; /* $target_url_id; */ ?>'>   
+	   		<td><?php echo $row; ?></td>
+	   		<td class="key"><?php echo $key; ?></td> 
 	   		<td>
 	   			<div class='url target_url'>
-	   				<a href='https://<?php echo $target_url['target_url']; ?>' target='blank'><?php echo $target_url['target_url']; ?></a>
+	   				<a href='<?php echo $target_url['target_url']; ?>' target='blank'><?php echo $target_url['target_url']; ?></a>
 	   			</div>
-	   			<form id='form-<?php echo $row; ?>' class="input_url" method="post">
-	   				<!--input type="hidden" id='<?php /* echo $target_url['id']; */ ?>'-->
-	   				<!--input type="hidden" id='keyw-<?php /* echo $row; */ ?>' name='keyw-<?php /* echo $row; */ ?>' value='<?php /* echo $target_url['keyword']; */ ?>'-->
-	   				<input type="text" id='target_url-<?php echo $row; ?>' name='target_url-<?php echo $row; ?>' placeholder="Url.." />  <!-- value='<?php /* echo $target_url['target_url']; */ ?>' -->
-	   			</form>
-	   			<div id='edit-btn-<?php echo $row; ?>'>
+	   			<div id='edit-btn-<?php echo $row; ?>' class='edit-btn'>
 	   				<a href='#'><span class='glyphicon glyphicon-pencil'></span></a>
 	   			</div>
+	   			<form id='form-<?php echo $row; ?>' class="input_url" method="post">
+	   				<input type="text" id='target_url-<?php echo $row; ?>' name='target_url-<?php echo $row; ?>' placeholder="Url.." value='<?php echo $target_url['target_url']; ?>'/>
+	   			</form>
 	   			<div id='cancel-btn-<?php echo $row; ?>'>
 	   				<a href="#">Annulla</a>
 	   			</div>
  			</td>
-
-
-
-
 			<td>
 				<div class='url'><a href='https://<?php echo $url; ?>' target='blank'><?php echo $url; ?></a></div>
 			</td>
@@ -224,16 +203,13 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 				<div class='p-num'><?php echo $p_sett_sc; ?></div>
 				<div class='sub-date'><?php echo data_ita($date_sett_sc); ?></div>
 			</td>
-			<td class='posit this-week $color'>
+			<td class='posit this-week <?php echo $color; ?>'>
 				<div class='p-num'><?php echo $p; ?></div>
 				<div class='sub-date'><?php echo data_ita($giorno); ?></div>
 			</td> 
 			<td class='variaz <?php echo $color_var; ?>'><?php echo $variaz_perc_str; ?></td>
 			<td class='notes'><?php echo $annotaz; ?></td>
 		</tr>
-
-
-
 		<script>
 			$(document).ready(function(){
 
@@ -243,40 +219,44 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
 				// view/hide edit/cancel btns
-				$('#edit-btn-<?php echo $row; ?>').on('click', function(){
+				$('#edit-btn-<?php echo $row; ?>').on('click', function(e) {
+					e.preventDefault();
 					$('#form-<?php echo $row; ?>').css('display','block'); 
 					$('#edit-btn-<?php echo $row; ?>').css('display','none');
 					$('#cancel-btn-<?php echo $row; ?>').css('display','block');
 				});
-				$('#cancel-btn-<?php echo $row; ?>').on('click', function(){
+				$('#cancel-btn-<?php echo $row; ?>').on('click', function(e) {
+					e.preventDefault();
 					$('#form-<?php echo $row; ?>').css('display','none');
-					$('#edit-btn-<?php echo $row; ?>').css('display','block');
+					$('#edit-btn-<?php echo $row; ?>').css('display','inline-block');
 					$('#cancel-btn-<?php echo $row; ?>').css('display','none');
 				});
 
 				// ajax call
-				$('#form-<?php echo $row; ?>').keypress(function(e) {
+				$('#form-<?php echo $row; ?> input').keypress(function(e) {
 				    if(e.which == 13) {
-				    	
-				    	var keyword_<?php echo $row; ?> = $('#keyw-<?php echo $row; ?>').val();
-						var target_url_<?php echo $row; ?> = $('#target_url-<?php echo $row; ?>').val();
 
-				        alert($('#target_url-<?php echo $row; ?>').val());
-				        alert(target_url_<?php echo $row; ?>);
+				    	e.preventDefault();
+				    	var keyword_<?php echo $row; ?> = $('#row-<?php echo $row; ?> .key').text().trim(); 
+						var target_url_<?php echo $row; ?> = $('#target_url-<?php echo $row; ?>').val();
 				        
 				        $.ajax({
-		                    url:'functions.php',
+		                    url: 'ajax.php',  
 		                    method:'POST',
 		                    data:{
 		                        keyword:keyword_<?php echo $row; ?>,
 		                        target_url:target_url_<?php echo $row; ?>,
 		                    },
-		                   	success:function(data){
-		                       // alert(data);
+		                   	success:function(target_url) {
+		                    	// hide input form & cancel btn
+		                    	$('#form-<?php echo $row; ?>').css('display','none'); 
+								$('#cancel-btn-<?php echo $row; ?>').css('display','none'); 
+		                    	// show && overwrite old text with newer
+		                    	$('#row-<?php echo $row; ?> .target_url > a').attr('href', target_url).text(target_url);
+		                    	// show edit-btn
+		                    	$('#edit-btn-<?php echo $row; ?>').css('display','inline-block');
 		                   	}
 		                });
-
-
 				    }
 				});
 
@@ -287,7 +267,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/seo-tools/scrape-serp/functions.php';
 
 
 <?php   	
-	} 
+	} // fine loop foreach
 
 	$conn->close();
 

@@ -60,8 +60,51 @@ function get_target_url_per_keyword($conn) {
 
 
 
-function set_target_url_per_keyword($conn) {
 
-	//
+
+
+
+
+
+function set_target_url_per_keyword($conn,$key,$target_url) {
+	
+	// escape data
+	$key = mysqli_real_escape_string($conn, trim($key));
+	$target_url = mysqli_real_escape_string($conn, trim($target_url));
+
+	// truncate too long strings - fix max lenght
+	$key = mb_strimwidth($key, 0, 70,'...');  
+	$target_url = mb_strimwidth($target_url, 0, 130, '...');
+	
+
+	// verify if $key yet exixst in table
+	$k = "SELECT `keyword` FROM `target_url_per_keywords` WHERE `keyword` LIKE '$key'";
+	$query = $conn->query($k);
+
+	if($query->num_rows < 1) {
+
+		// insert new
+		$insert = "INSERT INTO `target_url_per_keywords` (`keyword`, `target_url`) VALUES ('$key', '$target_url')";
+		$inserted = $conn->query($insert);
+		
+		if ($inserted === FALSE) {
+			die('Error while new insert into DB. ('. __FILE__ . ')');
+		}
+
+	} else {
+
+		// update existent row
+		$update = "UPDATE `target_url_per_keywords` SET `target_url` = '$target_url' WHERE `keyword` LIKE '$key'";
+		$updated = $conn->query($update);
+
+		if ($updated === FALSE) {
+			die('Error while updating into DB. ('. __FILE__ . ')');
+		}
+
+	} 
+
+
+	return TRUE;
+	
 
 }
